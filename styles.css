@@ -179,6 +179,90 @@ body {
 }
 
 /* ═══════════════════════════════════════════
+   ENVELOPE TEXT LABELS
+   ═══════════════════════════════════════════ */
+
+.envelope-text {
+  position: absolute;
+  left: 50%;
+  z-index: 8;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 550ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 550ms cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 550ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Title above envelope ─── */
+#envelope-title {
+  top: 10%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.envelope-title-main {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3.4vw, 54px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--deep-navy);
+  text-shadow: 0 1px 8px rgba(184, 146, 79, 0.18);
+}
+
+.envelope-title-sub {
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 1.8vw, 26px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  color: var(--muted-gold);
+  text-transform: uppercase;
+}
+
+/* ─── Hint below seal ─── */
+#envelope-hint {
+  bottom: 14%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: clamp(11px, 1.1vw, 16px);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--soft-blue);
+}
+
+.envelope-hint-text {
+  display: inline-block;
+  animation: hint-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* ─── Smooth fade & slide out when not closed ─── */
+#media-container.state-opening #envelope-title,
+#media-container.state-open    #envelope-title,
+#media-container.state-closing #envelope-title {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -18px);
+}
+
+#media-container.state-opening #envelope-hint,
+#media-container.state-open    #envelope-hint,
+#media-container.state-closing #envelope-hint {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 18px);
+}
+
+/* ═══════════════════════════════════════════
    INVITATION WRAPPER
    ═══════════════════════════════════════════ */
 
