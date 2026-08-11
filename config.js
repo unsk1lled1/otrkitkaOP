@@ -1,6 +1,6 @@
 const CONFIG = {
   player1Name: "Кадырбекова Еркеназ",
-  player2Name: "Қалмағанбет Асель",
+  player2Name: "Торгаутова Алсу",
   subject: "Основы права",
   date: "12.08.26",
   time: "14:30",
