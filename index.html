@@ -1,45 +1,33 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Приглашение · Основы Права · Парная работа</title>
-  <meta name="description" content="Официальное приглашение на парную работу по Основам права. Ерка × Партнёр.">
+  <meta name="description"
+    content="Официальное приглашение на парную работу по Основам права. Кадырбекова Еркеназ × Қалмағанбет Асель.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <!-- ═══════════════════════════════════════════
        FULLSCREEN MEDIA CONTAINER
        ═══════════════════════════════════════════ -->
   <div id="media-container">
     <!-- Static hero image (closed envelope) -->
-    <img
-      id="hero-static"
-      src="bacg/bacg.png"
-      alt="Закрытый конверт с сургучной печатью E&A"
-      draggable="false"
-    >
+    <img id="hero-static" src="bacg/bacg.png" alt="Закрытый конверт с сургучной печатью E&A" draggable="false">
 
     <!-- Opening animation video -->
-    <video
-      id="video-opening"
-      src="bacg/backg_video.mp4"
-      muted
-      playsinline
-      preload="auto"
-    ></video>
+    <video id="video-opening" src="bacg/backg_video.mp4" muted playsinline preload="auto"></video>
 
     <!-- Reverse (closing) animation video -->
-    <video
-      id="video-closing"
-      src="bacg/reversed.mp4"
-      muted
-      playsinline
-      preload="auto"
-    ></video>
+    <video id="video-closing" src="bacg/reversed.mp4" muted playsinline preload="auto"></video>
 
     <!-- Background dim overlay -->
     <div id="bg-overlay"></div>
@@ -54,18 +42,10 @@
   <div id="invitation-wrapper">
 
     <!-- Sakura branches — decorative foreground -->
-    <img id="sakura-left"
-         class="sakura-branch sakura-left"
-         src="bacg/sakura.png"
-         alt=""
-         draggable="false"
-         aria-hidden="true">
-    <img id="sakura-right"
-         class="sakura-branch sakura-right"
-         src="bacg/sakura.png"
-         alt=""
-         draggable="false"
-         aria-hidden="true">
+    <img id="sakura-left" class="sakura-branch sakura-left" src="bacg/sakura.png" alt="" draggable="false"
+      aria-hidden="true">
+    <img id="sakura-right" class="sakura-branch sakura-right" src="bacg/sakura.png" alt="" draggable="false"
+      aria-hidden="true">
 
     <!-- Physical paper sheet rising from envelope -->
     <div id="paper-sheet">
@@ -123,7 +103,8 @@
 
         <!-- Description -->
         <p class="inv-desc" data-stagger="9" id="inv-desc">
-          Приглашаю вас на парную работу по Основам права. Будем проверять знания, обсуждать темы, задавать друг другу вопросы!
+          Приглашаю вас на парную работу по Основам права. Будем проверять знания, обсуждать темы, задавать друг другу
+          вопросы!
         </p>
 
         <!-- Actions -->
@@ -151,4 +132,5 @@
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
+
 </html>
