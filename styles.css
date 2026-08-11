@@ -1,0 +1,785 @@
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════ */
+
+:root {
+  --ivory:        #F4F0E8;
+  --deep-navy:    #172333;
+  --burgundy:     #741F2A;
+  --muted-gold:   #B8924F;
+  --charcoal:     #25282D;
+  --soft-blue:    #91A5B5;
+
+  --ivory-dark:   #E8E2D6;
+  --navy-light:   #1E3048;
+  --burgundy-light: #8A2A36;
+  --gold-light:   #C9A463;
+  --gold-dim:     #9A7A42;
+
+  --font-serif:   'Cormorant Garamond', 'Georgia', serif;
+  --font-sans:    'Inter', -apple-system, 'Segoe UI', sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--charcoal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--charcoal);
+}
+
+/* ═══════════════════════════════════════════
+   MEDIA CONTAINER
+   ═══════════════════════════════════════════ */
+
+#media-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+#hero-static,
+#video-opening,
+#video-closing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  pointer-events: none;
+}
+
+#hero-static { z-index: 3; }
+
+#video-opening {
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#video-closing {
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   STATE CLASSES
+   ═══════════════════════════════════════════ */
+
+#media-container.state-opening #hero-static,
+#media-container.state-open    #hero-static,
+#media-container.state-closing #hero-static {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#media-container.state-opening #video-opening,
+#media-container.state-open    #video-opening {
+  opacity: 1;
+  visibility: visible;
+  z-index: 4;
+}
+
+#media-container.state-closing #video-closing {
+  opacity: 1;
+  visibility: visible;
+  z-index: 4;
+}
+
+#media-container.state-closing #video-opening {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   BACKGROUND OVERLAY — stronger dim for contrast
+   ═══════════════════════════════════════════ */
+
+#bg-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+  background: rgba(23, 35, 51, 0);
+  transition: background 500ms var(--ease-in-out);
+}
+
+#media-container.state-open #bg-overlay {
+  background: rgba(23, 35, 51, 0.25);
+}
+
+#media-container.state-closing #bg-overlay {
+  background: rgba(23, 35, 51, 0);
+}
+
+/* ═══════════════════════════════════════════
+   E&A SEAL HOTSPOT
+   ═══════════════════════════════════════════ */
+
+#seal-hotspot {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 8vw;
+  height: 8vw;
+  max-width: 130px;
+  max-height: 130px;
+  min-width: 60px;
+  min-height: 60px;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  transition: transform 250ms var(--ease-out);
+}
+
+#seal-hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
+#seal-hotspot:focus-visible {
+  box-shadow: 0 0 0 2px var(--muted-gold);
+}
+
+#media-container.state-opening #seal-hotspot,
+#media-container.state-open    #seal-hotspot,
+#media-container.state-closing #seal-hotspot {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ═══════════════════════════════════════════
+   INVITATION WRAPPER
+   ═══════════════════════════════════════════ */
+
+#invitation-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#invitation-wrapper.visible {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ═══════════════════════════════════════════
+   PAPER SHEET — SCALED UP ~15%
+   ═══════════════════════════════════════════ */
+
+#paper-sheet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(440px, 40vw, 680px);
+  height: clamp(580px, 86vh, 960px);
+  background: var(--ivory);
+  border: 1px solid rgba(184, 146, 79, 0.32);
+
+  /* Stronger shadow for separation */
+  box-shadow:
+    0 2px 10px rgba(23, 35, 51, 0.08),
+    0 10px 40px rgba(23, 35, 51, 0.14),
+    0 28px 70px -8px rgba(23, 35, 51, 0.18);
+
+  /* Bottom fade — entering envelope */
+  -webkit-mask-image: linear-gradient(to bottom,
+    black 0%,
+    black 84%,
+    rgba(0,0,0,0.3) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom,
+    black 0%,
+    black 84%,
+    rgba(0,0,0,0.3) 93%,
+    transparent 100%
+  );
+
+  /* Hidden state */
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 30px));
+  transition: opacity 400ms var(--ease-in-out),
+              transform 400ms var(--ease-in-out);
+}
+
+#paper-sheet.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity 380ms var(--ease-out),
+              transform 380ms var(--ease-out);
+}
+
+/* Top gold accent line */
+#paper-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--muted-gold),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Inner decorative border */
+.paper-inner-border {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 0.5px solid rgba(184, 146, 79, 0.18);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════
+   INVITATION CONTENT — tighter padding
+   ═══════════════════════════════════════════ */
+
+#invitation-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 38px 44px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  z-index: 2;
+}
+
+#invitation-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════
+   STAGGER ANIMATION
+   ═══════════════════════════════════════════ */
+
+[data-stagger] {
+  opacity: 0;
+  transform: translateY(6px);
+  filter: blur(2px);
+  transition: opacity 320ms var(--ease-out),
+              transform 320ms var(--ease-out),
+              filter 320ms var(--ease-out);
+}
+
+[data-stagger].revealed {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+[data-stagger].closing-out {
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(2px);
+  transition: opacity 280ms var(--ease-in-out),
+              transform 280ms var(--ease-in-out),
+              filter 280ms var(--ease-in-out);
+}
+
+/* ═══════════════════════════════════════════
+   INSTITUTIONAL HEADER
+   ═══════════════════════════════════════════ */
+
+.inv-inst {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--soft-blue);
+  margin-bottom: 16px;
+}
+
+/* ═══════════════════════════════════════════
+   LABEL — "ПРИГЛАШЕНИЕ" — scaled up
+   ═══════════════════════════════════════════ */
+
+.inv-label {
+  font-family: var(--font-sans);
+  font-size: clamp(12px, 1.2vw, 15px);
+  font-weight: 600;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--burgundy);
+  margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════
+   DECORATIVE RULES
+   ═══════════════════════════════════════════ */
+
+.inv-rule {
+  width: 56px;
+  height: 1.5px;
+  background: var(--muted-gold);
+  margin: 0 auto 14px;
+  border: none;
+  flex-shrink: 0;
+}
+
+.inv-rule--thin {
+  width: 36px;
+  height: 1px;
+  background: var(--gold-dim);
+  opacity: 0.45;
+  margin: 8px auto 14px;
+}
+
+/* ═══════════════════════════════════════════
+   HEADING — "на парную работу" — HERO SIZE
+   ═══════════════════════════════════════════ */
+
+.inv-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 4vw, 54px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--deep-navy);
+  letter-spacing: 0.5px;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+/* ═══════════════════════════════════════════
+   SUBJECT — "по Основам права" — bolder
+   ═══════════════════════════════════════════ */
+
+.inv-subject {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2.3vw, 28px);
+  font-weight: 600;
+  color: var(--deep-navy);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════════
+   EPIGRAPH
+   ═══════════════════════════════════════════ */
+
+.inv-epigraph {
+  font-family: var(--font-serif);
+  font-size: clamp(13px, 1.3vw, 16px);
+  font-style: italic;
+  color: var(--soft-blue);
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   NAMES — accent block, scaled up
+   ═══════════════════════════════════════════ */
+
+.inv-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.8vw, 34px);
+  font-weight: 600;
+  color: var(--deep-navy);
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+
+.inv-x {
+  font-weight: 300;
+  color: var(--muted-gold);
+  font-size: 0.65em;
+  letter-spacing: 3px;
+}
+
+/* ═══════════════════════════════════════════
+   DETAILS — scaled up
+   ═══════════════════════════════════════════ */
+
+.inv-details {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 16px;
+}
+
+.inv-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+
+.inv-detail-label {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--soft-blue);
+}
+
+.inv-detail-value {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--deep-navy);
+  letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════
+   DESCRIPTION
+   ═══════════════════════════════════════════ */
+
+.inv-desc {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--charcoal);
+  line-height: 1.7;
+  opacity: 0.7;
+  margin-bottom: 20px;
+  max-width: 380px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════
+   ACTION BUTTONS — larger CTA
+   ═══════════════════════════════════════════ */
+
+.inv-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.inv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 250ms var(--ease-out);
+}
+
+.inv-btn--primary {
+  background: var(--deep-navy);
+  color: var(--ivory);
+  font-size: 12px;
+  padding: 15px 40px;
+  border-radius: 2px;
+}
+
+.inv-btn--primary:hover {
+  background: var(--navy-light);
+  box-shadow: 0 4px 24px rgba(23, 35, 51, 0.3);
+}
+
+.inv-btn--secondary {
+  background: transparent;
+  color: var(--muted-gold);
+  font-size: 11px;
+  padding: 9px 24px;
+  border: 1px solid var(--muted-gold);
+  border-radius: 2px;
+}
+
+.inv-btn--secondary:hover {
+  background: var(--muted-gold);
+  color: var(--ivory);
+}
+
+.inv-btn--secondary.copied {
+  border-color: var(--soft-blue);
+  color: var(--soft-blue);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER — scaled up
+   ═══════════════════════════════════════════ */
+
+.inv-footer {
+  margin-top: 18px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--muted-gold);
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE: TABLET
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  #paper-sheet {
+    width: clamp(380px, 55vw, 560px);
+    height: clamp(520px, 84vh, 880px);
+  }
+
+  #invitation-content {
+    padding: 24px 28px 40px;
+  }
+
+  .inv-heading {
+    font-size: clamp(28px, 4.5vw, 40px);
+  }
+
+  .inv-subject {
+    font-size: clamp(17px, 2.5vw, 24px);
+  }
+
+  .inv-details {
+    gap: 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE: MOBILE
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 520px) {
+  #paper-sheet {
+    width: 90vw;
+    height: 84vh;
+  }
+
+  #invitation-content {
+    padding: 22px 18px 36px;
+  }
+
+  .inv-heading {
+    font-size: 26px;
+  }
+
+  .inv-subject {
+    font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+
+  .inv-names {
+    font-size: 19px;
+    gap: 8px;
+  }
+
+  .inv-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .inv-btn--primary {
+    padding: 13px 28px;
+    font-size: 11px;
+    width: 100%;
+  }
+
+  .inv-btn--secondary {
+    font-size: 10px;
+    width: 100%;
+  }
+
+  #seal-hotspot {
+    width: 14vw;
+    height: 14vw;
+    min-width: 50px;
+    min-height: 50px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE: SMALL MOBILE
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 380px) {
+  #paper-sheet {
+    width: 94vw;
+  }
+
+  #invitation-content {
+    padding: 18px 12px 32px;
+  }
+
+  .inv-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+
+  .inv-inst {
+    font-size: 7px;
+  }
+
+  .inv-heading {
+    font-size: 22px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SAKURA BRANCHES — DECORATIVE FOREGROUND
+   ═══════════════════════════════════════════ */
+
+.sakura-branch {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  z-index: 22;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ─── LEFT BRANCH ─── */
+.sakura-left {
+  top: -13%;
+  left: -8%;
+  width: clamp(180px, 22vw, 330px);
+  opacity: 0;
+  transform: scaleX(-1) rotate(-8deg) translate(70px, -45px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 1000ms cubic-bezier(.22,.8,.25,1),
+              transform 1000ms cubic-bezier(.22,.8,.25,1);
+}
+
+.sakura-left.visible {
+  opacity: 0.82;
+  transform: scaleX(-1) rotate(-8deg) translate(0, 0) scale(1);
+}
+
+.sakura-left.closing {
+  opacity: 0;
+  transform: scaleX(-1) rotate(-8deg) translate(60px, -40px) scale(0.96);
+  transition: opacity 600ms var(--ease-in-out),
+              transform 600ms var(--ease-in-out);
+}
+
+/* ─── RIGHT BRANCH ─── */
+.sakura-right {
+  top: -6%;
+  right: -7%;
+  width: clamp(340px, 36vw, 560px);
+  transform: rotate(12deg) translate(80px, -50px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 1100ms cubic-bezier(.22,.8,.25,1),
+              transform 1100ms cubic-bezier(.22,.8,.25,1);
+}
+
+.sakura-right.visible {
+  opacity: 1;
+  transform: rotate(12deg) translate(0, 0) scale(1);
+}
+
+.sakura-right.closing {
+  opacity: 0;
+  transform: rotate(12deg) translate(70px, -40px) scale(0.96);
+  transition: opacity 600ms var(--ease-in-out),
+              transform 600ms var(--ease-in-out);
+}
+
+/* ─── IDLE FLOATING (desktop only) ─── */
+@keyframes sakura-idle-left {
+  0%, 100% { transform: scaleX(-1) rotate(-8deg) translate(0, 0) scale(1); }
+  50%      { transform: scaleX(-1) rotate(-8.3deg) translate(0, 2px) scale(1); }
+}
+
+@keyframes sakura-idle-right {
+  0%, 100% { transform: rotate(12deg) translate(0, 0) scale(1); }
+  50%      { transform: rotate(11.7deg) translate(0, 3px) scale(1); }
+}
+
+.sakura-left.idle {
+  animation: sakura-idle-left 7s ease-in-out infinite;
+}
+
+.sakura-right.idle {
+  animation: sakura-idle-right 6s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   SAKURA RESPONSIVE
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .sakura-left {
+    width: clamp(130px, 16vw, 220px);
+    top: -18%;
+    left: -16%;
+  }
+  .sakura-right {
+    width: clamp(260px, 32vw, 420px);
+    top: -5%;
+    right: -10%;
+  }
+}
+
+@media (max-width: 520px) {
+  .sakura-left {
+    display: none;
+  }
+  .sakura-right {
+    width: clamp(180px, 42vw, 260px);
+    top: -4%;
+    right: -8%;
+  }
+  .sakura-left.idle,
+  .sakura-right.idle {
+    animation: none;
+  }
+}
